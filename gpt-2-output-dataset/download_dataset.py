@@ -3,17 +3,20 @@ import sys
 import requests
 from tqdm import tqdm
 
-subdir = 'data'
+# Specify the path to your external hard drive
+external_hard_drive_path = '/path/to/external/hard/drive'
+
+subdir = os.path.join(external_hard_drive_path, 'data')
 if not os.path.exists(subdir):
     os.makedirs(subdir)
-subdir = subdir.replace('\\','/') # needed for Windows
+subdir = subdir.replace('\\', '/')  # needed for Windows
 
 for ds in [
     'webtext',
-    'small-117M',  'small-117M-k40',
+    'small-117M', 'small-117M-k40',
     'medium-345M', 'medium-345M-k40',
-    'large-762M',  'large-762M-k40',
-    'xl-1542M',    'xl-1542M-k40',
+    'large-762M', 'large-762M-k40',
+    'xl-1542M', 'xl-1542M-k40',
 ]:
     for split in ['train', 'valid', 'test']:
         filename = ds + "." + split + '.jsonl'

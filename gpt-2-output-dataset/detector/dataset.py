@@ -58,7 +58,8 @@ class EncodedDataset(Dataset):
     max_sequence_length (int, optional): The maximum length of the tokenized sequences.
         If not specified, defaults to the tokenizer's maximum allowed length.
 
-    The `__getitem__` method of the dataset retrieves the tokenized representation of a text and its label, returning them as PyTorch tensors. This makes the class compatible with PyTorch's DataLoader for efficient batch processing during model training.
+    The `__getitem__` method of the dataset retrieves the tokenized representation of a text and its label, returning them as PyTorch tensors.
+    This makes the class compatible with PyTorch's DataLoader for efficient batch processing during model training.
     """
     def __init__(self, texts: List[str], labels: List[int], tokenizer: PreTrainedTokenizer, max_sequence_length: int = None):
         self.texts = texts
