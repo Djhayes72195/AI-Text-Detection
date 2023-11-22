@@ -11,14 +11,14 @@ from transformers import PreTrainedTokenizer
 
 def load_texts(data_file):
     """
-    Extract 'abstract' and 'label' from JSONL files.
+    Extract 'text' and 'label' from JSONL files.
     """
     texts, labels = [], []
     with open(data_file, 'r') as file:
         for line in file:
             try:
                 entry = json.loads(line)
-                texts.append(entry['abstract'])
+                texts.append(entry['text'])
                 labels.append(int(entry['label']))  # Assuming label field exists
             except json.JSONDecodeError:
                 print(f"Error decoding JSON from line: {line}")

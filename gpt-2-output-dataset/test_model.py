@@ -25,29 +25,14 @@ model.eval()  # Set the model to evaluation mode
 # Get baseline performance on test set #
 ########################################
 
-# test_texts, test_labels = load_texts('Data/test.jsonl')
-corpus = Corpus()
+corpus = Corpus(data_dir='gpt-2-output-dataset/detector/ParaphrasedDataFreq=whole') # change path to data you want
 test_set = corpus.test_texts
 test_labels = corpus.test_labels
 
-# __init__(self, texts: List[str], labels: List[int],
-# tokenizer: PreTrainedTokenizer, max_sequence_length: int = None)
+
 encoded_test = EncodedDataset(test_set, test_labels, tokenizer)
 test_loader = DataLoader(encoded_test, batch_size=BATCH_SIZE, shuffle=True)
-# for test in encoded_test:
-#     print('stop and check')
 
-
-
-
-# inputs = tokenizer(
-#     "Python and Java are two widely-used programming languages, each with its own unique characteristics. Python is known for its clean and concise syntax, which emphasizes readability and reduces the need for excessive code. It employs indentation to define code blocks, making it quite approachable for beginners. In contrast, Java's syntax is more verbose, requiring semicolons and curly braces for code structure, which can make it appear less concise compared to Python. Another fundamental difference lies in their type systems. Python is dynamically typed, meaning that variable types are determined at runtime, offering flexibility but also potentially leading to runtime errors. Java, on the other hand, is statically typed, requiring explicit type declarations for variables. This static typing allows for catching type-related errors at compile-time, which can enhance code reliability.",
-#     padding=True, 
-#     truncation=True, 
-#     max_length=512, 
-#     return_tensors="pt"
-# )
-print('examine')
 
 predictions = []
 true_labels = []
@@ -61,13 +46,13 @@ for batch in test_loader:
         outputs = model(input_ids, attention_mask=attention_mask)
         logits = outputs.logits
         probabilities = torch.sigmoid(logits)
+        print(probabilities)
         # Convert logits to predictions
         batch_predictions = torch.argmax(logits, dim=1)
         predictions.extend(batch_predictions.tolist())
         true_labels.extend(label.tolist())
         if itera > 5:
             break
-
 
 accuracy = accuracy_score(true_labels, predictions)
 conf_matrix = confusion_matrix(true_labels, predictions)
@@ -78,4 +63,3 @@ print("Accuracy:", accuracy)
 print("Confusion Matrix:\n", conf_matrix)
 print("Precision:", precision)
 print("Recall:", recall)
-

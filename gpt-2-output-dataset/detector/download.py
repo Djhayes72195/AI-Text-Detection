@@ -4,7 +4,7 @@ import requests
 import torch.distributed as dist
 from tqdm import tqdm
 
-from .utils import distributed
+from utils import distributed
 
 ALL_DATASETS = [
     'webtext',
@@ -46,4 +46,7 @@ def download(*datasets, data_dir='data'):
 
 
 if __name__ == '__main__':
-    download(*ALL_DATASETS)
+    external_drive_path = '/Volumes/My Passport for Mac/DeepLearningGPT2Data/' # for downloading to my ext harddrive
+    local_path = 'gpt-2-output-dataset/Deep Learning Final Project Data Pile'
+
+    download('webtext', data_dir=local_path)
