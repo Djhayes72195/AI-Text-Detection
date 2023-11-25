@@ -1,0 +1,19 @@
+{
+    "Model Status": "BEFORE_FINE_TUNING",
+    "data_type": "ParaphrasedDataFreq=whole_in_parts",
+    "batch_size": 8,
+    "accuracy": 0.916,
+    "confusion_matrix": [
+        [
+            438,
+            62
+        ],
+        [
+            22,
+            478
+        ]
+    ],
+    "precision": 0.8851851851851852,
+    "recall": 0.956,
+    "Notes": "Performance on ParaphrasedDataFreq=whole. We actually do not see a noticable drop in performance.\n               "
+}

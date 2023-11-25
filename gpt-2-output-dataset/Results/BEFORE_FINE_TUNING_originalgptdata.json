@@ -1,0 +1,19 @@
+{
+    "Model Status": "BEFORE_FINE_TUNING",
+    "data_type": "OriginalGPTData",
+    "batch_size": 8,
+    "accuracy": 0.9375,
+    "confusion_matrix": [
+        [
+            21,
+            1
+        ],
+        [
+            2,
+            24
+        ]
+    ],
+    "precision": 0.96,
+    "recall": 0.9230769230769231,
+    "Notes": "This run represents the results of running inference with the\n                  original model on the orginal data. We expect good performance.\n                  We still stop after 5 batches. The purpose of this test, more than anything,\n                  is to confirm that the model is loading correctly.\n               "
+}

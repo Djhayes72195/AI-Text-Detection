@@ -6,6 +6,7 @@ We want to be able to adjust: which data is being paraphrased, to what extent it
 """
 
 import nltk
+from nltk import word_tokenize
 import json
 import numpy as np
 import os
@@ -20,12 +21,12 @@ model = AutoModelForSeq2SeqLM.from_pretrained("Vamsi/T5_Paraphrase_Paws").to('cp
 ABSTRACT_PATH = 'gpt-2-output-dataset/detector/Data'
 GPT_DATA_PATH = 'gpt-2-output-dataset/detector/OriginalGPTData'
 PARA_PATH = "gpt-2-output-dataset/detector/ParaphrasedDataFreq={}"
+LARGE_GPT_DATA_PATH = 'gpt-2-output-dataset/detector/OriginalGPTDataLarge'
 
-print('stop')
 
 FILE_NAMES = ['test.jsonl']
 
-STOP_AFTER = 20 # creating short version to prototype
+STOP_AFTER = 10000 # creating short version to prototype
 
 PARA_FREQUNCY = 3
 # Add tain and validation when/if needed
@@ -46,24 +47,56 @@ def paraphrase_text(start_dir, para_dir, para_freq):
                 if record['label'] == '1':
                     para_f.write(json.dumps(record) + '\n')
                     continue # don't paraphrase human text
-                if para_freq != 'whole':
+                if isinstance(para_freq, int):
                     text = sent_tokenize(record['text'])
                     for i, sentence in enumerate(text):
                         if i%para_freq == 0:
                             new_sentence = T5_paraphrase(sentence)
                             text[i] = new_sentence
-                    text = " ".join(text)
-                    new_record = {'text': text,
+                    new_text = " ".join(text)
+                    new_record = {'text': new_text,
                                 'label': record['label']}
-                else:
+                elif para_freq == 'whole':
                     new_text = T5_paraphrase(record['text'])
                     new_record = {'text': new_text,
                                   'label': record['label']}
+                elif para_freq == 'whole_in_parts':
+                    text = split_into_parts(record['text'])
+                    old_text = list(text)
+                    for i, chunk in enumerate(text):
+                        text[i] = T5_paraphrase(chunk)
+                    new_text = " ".join(text)
+                    new_record = {'text': new_text,
+                                  'label': record['label']}
+                else:
+                    raise Exception
                 para_f.write(json.dumps(new_record) + '\n')
                 if iterations > STOP_AFTER:
                     break
 
-         
+def split_into_parts(text, max_words=50):
+    sentences = sent_tokenize(text)
+    parts = []
+    current_part = []
+    current_word_count = 0
+
+    for sentence in sentences:
+        words_in_sentence = len(word_tokenize(sentence))
+        if current_word_count + words_in_sentence > max_words:
+            # If adding this sentence exceeds max_words, start a new part
+            parts.append(' '.join(current_part))
+            current_part = [sentence]
+            current_word_count = words_in_sentence
+        else:
+            # Otherwise, add this sentence to the current part
+            current_part.append(sentence)
+            current_word_count += words_in_sentence
+
+    # Add the last part if it's not empty
+    if current_part:
+        parts.append(' '.join(current_part))
+
+    return parts    
 
 def T5_paraphrase(text):
     prompt =  "paraphrase: " + text + " </s>"
@@ -71,11 +104,11 @@ def T5_paraphrase(text):
     input_ids, attention_masks = encoding["input_ids"].to("cpu"), encoding["attention_mask"].to("cpu")
     outputs = model.generate(
         input_ids=input_ids, attention_mask=attention_masks,
-        max_length=256,
+        max_length=512,
         do_sample=True,
         top_k=80,
         top_p=0.95,
-        early_stopping=True,
+        early_stopping=False,
         num_return_sequences=5
     )
 
@@ -86,4 +119,4 @@ def T5_paraphrase(text):
     print(paraphrased_sent)
     return paraphrased_sent
 
-paraphrase_text(GPT_DATA_PATH, PARA_PATH, 'whole')
+paraphrase_text(LARGE_GPT_DATA_PATH, PARA_PATH, 'whole_in_parts')

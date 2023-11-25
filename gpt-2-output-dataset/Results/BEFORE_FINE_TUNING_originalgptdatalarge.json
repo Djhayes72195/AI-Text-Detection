@@ -1,0 +1,19 @@
+{
+    "Model Status": "BEFORE_FINE_TUNING",
+    "data_type": "OriginalGPTDataLarge",
+    "batch_size": 8,
+    "accuracy": 0.958,
+    "confusion_matrix": [
+        [
+            480,
+            20
+        ],
+        [
+            22,
+            478
+        ]
+    ],
+    "precision": 0.9598393574297188,
+    "recall": 0.956,
+    "Notes": "Performance on ParaphrasedDataFreq=whole. We actually do not see a noticable drop in performance.\n               "
+}

@@ -1,3 +1,6 @@
 .DS_store
 venv/
 gpt-2-output-dataset/detector-base.pt
+*.jsonl
+*.csv
+*.pyc

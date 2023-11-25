@@ -1,0 +1,19 @@
+{
+    "Model Status": "BEFORE_FINE_TUNING",
+    "data_type": "ParaphrasedDataFreq=3",
+    "batch_size": 8,
+    "accuracy": 0.9583333333333334,
+    "confusion_matrix": [
+        [
+            14,
+            1
+        ],
+        [
+            0,
+            9
+        ]
+    ],
+    "precision": 0.9,
+    "recall": 1.0,
+    "Notes": "Performance on ParaphrasedDataFreq=3. We actually do not see a noticable drop in performance.\n               "
+}
