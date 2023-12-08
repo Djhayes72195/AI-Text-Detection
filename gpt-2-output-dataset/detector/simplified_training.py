@@ -9,33 +9,42 @@ from dataset import EncodedDataset, Corpus
 
 class Trainer:
     def __init__(self, data_path, num_epochs, starting_checkpoint, train_model_location,
-                 optimizer, loss_fn, lr):
+                 optimizer, loss_fn, lr, save_model=True, transfer_learn=True):
         self.num_epochs = num_epochs
         # Load the tokenizer
         self.tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
 
-# Load the checkpoint
-        model_path = starting_checkpoint
-        checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
+        if transfer_learn:
+            # Load the checkpoint
+            model_path = starting_checkpoint
+            checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
 
-        # Check if there's a 'config' in the checkpoint
-        if 'config' in checkpoint:
-            config = checkpoint['config']
-            self.model = RobertaForSequenceClassification(config)
+            # Check if there's a 'config' in the checkpoint
+            if 'config' in checkpoint:
+                config = checkpoint['config']
+                self.model = RobertaForSequenceClassification(config)
+            else:
+                # Fallback to standard model initialization
+                self.model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=2)
+
+            # Extract the model state dict and load it
+            model_state_dict = checkpoint.get('model_state_dict', checkpoint)
+            self.model.load_state_dict(model_state_dict, strict=False)
         else:
-            # Fallback to standard model initialization
+            # Initialize with base RoBERTa weights
             self.model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=2)
-
-        # Extract the model state dict and load it
-        model_state_dict = checkpoint.get('model_state_dict', checkpoint)  # Supports both types of checkpoints
-        self.model.load_state_dict(model_state_dict, strict=False)
 
         self.trained_model_location = train_model_location
 
+        # Initialize optimizer
         if optimizer == 'Adam':
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr)
+
+        # Initialize loss function
         if loss_fn == 'cross_entropy':
             self.loss_fn = torch.nn.CrossEntropyLoss()
+        
+        self.save_model = save_model
 
 
     def prepare_data(self, data_path):
@@ -122,13 +131,14 @@ class Trainer:
             val_accuracy = accuracy_score(validation_true_labels, validation_predictions)
             avg_val_loss = val_loss / len(validation_loader)
         
-            print(f'Epoch {epoch+1}: Training Loss: {avg_train_loss:.4f},
+            print(f"""Epoch {epoch+1}: Training Loss: {avg_train_loss:.4f}, 
                   Training Accuracy: {train_accuracy:.4f},
                   Validation Loss: {avg_val_loss:.4f},
-                  Validation Accuracy: {val_accuracy:.4f}')
+                  Validation Accuracy: {val_accuracy:.4f}""")
 
         # Save model
-        torch.save(self.model.state_dict(), self.trained_model_location)
+        if self.save_model:
+            torch.save(self.model.state_dict(), self.trained_model_location)
 
 
 
@@ -136,7 +146,7 @@ if __name__ == '__main__':
 
     #### Modify for run
     starting_checkpoint = '/Users/dustinhayes/Desktop/DEEP LEARNING FINAL PROJECT/gpt-2-output-dataset/detector-base.pt'
-    data_path = 'gpt-2-output-dataset/detector/Data'
+    data_path = 'gpt-2-output-dataset/detector/TestData'
     # def __init__(self, data_path, num_epochs, starting_checkpoint, train_model_location,
                 #  optimizer, loss_fn): 
     num_epochs = 2
@@ -148,4 +158,8 @@ if __name__ == '__main__':
                       starting_checkpoint=starting_checkpoint,
                       train_model_location=train_model_location,
                       optimizer=optimizer,
-                      loss_fn=loss_fn, lr=learning_rate)
+                      loss_fn=loss_fn, lr=learning_rate,
+                      save_model=False,
+                      transfer_learn=False)
+    train_loader, validation_loader, test_loader = trainer.prepare_data(data_path=data_path)
+    trainer.train_model(train_loader, validation_loader, test_loader)

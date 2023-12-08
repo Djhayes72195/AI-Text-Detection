@@ -4,3 +4,15 @@ old gpt-2 text: 'The European Parliament has the power to decide, in principle, 
 
 new T5 paraphrased text, entierly paraphrased in 2-3 sentence chunks:
 'The European Parliament has the power to decide on its principle whether or not to grant Bulgaria a membership of the Union. Bulgaria is not an independent member of the European Union and has not since its accession in 2004, though it has access to the European Economic Area (EEEA) through membership in the EU. However, the European Commission has expressed an interest in the opening of the accession negotiations with Bulgaria; due to the Freedom of Movement laws of the EU and the rules governing the adoption of the national laws by the national parliaments, such negotiations must be conducted case-by-case. An accession decision can be made in principle and not in law, it can also be decided on the basis of a recommendation of the Council. An accession decision can be taken after the conclusion of a preparatory conference in which experts discuss the application and interpretation of the Treaty. These meetings take place at the European Council of State and Government in June 2014 and then at the European Council in December 2014. Both meetings are usually held in Brussels. A decision on a possible EEA accession by the European Parliament is taken in October 2018 at a meeting of political group leaders (the "Council decision") after a discussion of all the national representatives of interest. The Council will discuss the EU and EEA membership agenda at its next meeting in January 2019.'
+
+
+
+Abstract Data:
+
+I have had an odd experience with the abstract data. Here are some points on it.
+- ZeroGPT was not capable of detecting AI-generated content at all. I got 0% chance of AI every example I tried.
+- I further trained the GPT-2 base detector model on just 50 examples from the Abstract set and got to 90% accuracy (POST_FINE_TUNING_testdata.json).
+- I checked to see how much work the transfer learning was doing by running the same experiment on RoBERTa base. It did not work at all. It isn't better than random guess after the same amount of data.
+- I can not tell the difference between the AI generated abstracts and the real thing.
+- I will have to think about why this appears to work so well (I am very suspicious)
+- the fact that training did not work nearly as well without transfer learning does assuage some of my fears of data leakage. 

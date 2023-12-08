@@ -91,25 +91,30 @@ class TestModel:
 
 if __name__ == '__main__':
     # Load the checkpoint
-    model_path = '/Users/dustinhayes/Desktop/DEEP LEARNING FINAL PROJECT/gpt-2-output-dataset/detector-base.pt'
+    # model_path = '/Users/dustinhayes/Desktop/DEEP LEARNING FINAL PROJECT/gpt-2-output-dataset/detector-base.pt'
+    model_path = 'gpt-2-output-dataset/detector/TrainedModels/test_training.pth'
     checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
 
     model_name = 'roberta-base'
     model = RobertaForSequenceClassification.from_pretrained(model_name)
-    model.load_state_dict(checkpoint['model_state_dict'], strict=False) # There is a slight mismatch in architecture
+    if 'model_state_dict' in checkpoint.keys():
+        model.load_state_dict(checkpoint['model_state_dict'], strict=False) # There is a slight mismatch in architecture
     # The small mismatch is architecture does not seem to be very impactful. I still get ~90% accuracy on org data.
-    
+    else:
+        model.load_state_dict(checkpoint, strict=False)
     
 
     ##############################################################
     # THE CONTENT AFTER THIS POINT SHOULD BE MODIFIED RUN BY RUN #
     ##############################################################
-    run_note = """Performance on ParaphrasedDataFreq=whole. We actually do not see a noticable drop in performance.
+    run_note = """Results from a test run on a small (50 samples) subset of abstract data. The validation accuracy
+                was surpisingly high at .91. It was only trained for 2 epochs. I don't understand why it seemed to work, I was just
+                testing that the training loop was up and running. 
                """
-    test = TestModel(data_dir_name='ParaphrasedDataFreq=whole_in_parts',
+    test = TestModel(data_dir_name='TestData',
                      run_note=run_note,
                      model=model,
                      stop_after=1000,
-                     before_tuning=True)
+                     before_tuning=False)
     test.test_model()
     test.calculate_and_record_metrics()
