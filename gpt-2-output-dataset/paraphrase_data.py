@@ -19,16 +19,18 @@ tokenizer = AutoTokenizer.from_pretrained("Vamsi/T5_Paraphrase_Paws")
 model = AutoModelForSeq2SeqLM.from_pretrained("Vamsi/T5_Paraphrase_Paws").to('cpu')
 
 ABSTRACT_PATH = 'gpt-2-output-dataset/detector/Data'
+POST_PROCESSING_ABSTRACT_PATH = 'gpt-2-output-dataset/detector/GPT3LlamaParaData'
 GPT_DATA_PATH = 'gpt-2-output-dataset/detector/OriginalGPTData'
 PARA_PATH = "gpt-2-output-dataset/detector/ParaphrasedDataFreq={}"
+POST_PROCESSING_ABSTRACT_PARA = "gpt-2-output-dataset/detector/AbstractParaphrased"
 LARGE_GPT_DATA_PATH = 'gpt-2-output-dataset/detector/OriginalGPTDataLarge'
 
 
 FILE_NAMES = ['test.jsonl']
 
-STOP_AFTER = 10000 # creating short version to prototype
+STOP_AFTER = 100000 # for creating short version to prototype
 
-PARA_FREQUNCY = 3
+# PARA_FREQUNCY = 3
 # Add tain and validation when/if needed
 
 def paraphrase_text(start_dir, para_dir, para_freq):
@@ -119,4 +121,4 @@ def T5_paraphrase(text):
     print(paraphrased_sent)
     return paraphrased_sent
 
-paraphrase_text(LARGE_GPT_DATA_PATH, PARA_PATH, 'whole_in_parts')
+paraphrase_text(POST_PROCESSING_ABSTRACT_PATH, POST_PROCESSING_ABSTRACT_PARA, 'whole_in_parts')

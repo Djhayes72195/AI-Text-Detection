@@ -92,7 +92,7 @@ class TestModel:
 if __name__ == '__main__':
     # Load the checkpoint
     # model_path = '/Users/dustinhayes/Desktop/DEEP LEARNING FINAL PROJECT/gpt-2-output-dataset/detector-base.pt'
-    model_path = 'gpt-2-output-dataset/detector/TrainedModels/test_training.pth'
+    model_path = 'gpt-2-output-dataset/detector/TrainedModels/post_paraphrase_trained_abstracts_model.pth'
     checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
 
     model_name = 'roberta-base'
@@ -107,11 +107,9 @@ if __name__ == '__main__':
     ##############################################################
     # THE CONTENT AFTER THIS POINT SHOULD BE MODIFIED RUN BY RUN #
     ##############################################################
-    run_note = """Results from a test run on a small (50 samples) subset of abstract data. The validation accuracy
-                was surpisingly high at .91. It was only trained for 2 epochs. I don't understand why it seemed to work, I was just
-                testing that the training loop was up and running. 
+    run_note = """This run is the result of performancing inference on abstract data paraphrased according to the original scheme.
                """
-    test = TestModel(data_dir_name='TestData',
+    test = TestModel(data_dir_name='AltPromptAbstractParaphrase',
                      run_note=run_note,
                      model=model,
                      stop_after=1000,
