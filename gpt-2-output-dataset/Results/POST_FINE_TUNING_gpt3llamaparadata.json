@@ -1,0 +1,19 @@
+{
+    "Model Status": "POST_FINE_TUNING",
+    "data_type": "GPT3LlamaParaData",
+    "batch_size": 8,
+    "accuracy": 0.9893579902302861,
+    "confusion_matrix": [
+        [
+            2809,
+            57
+        ],
+        [
+            4,
+            2862
+        ]
+    ],
+    "precision": 0.9804727646454265,
+    "recall": 0.9986043265875785,
+    "Notes": "This run will produce the results for my RoBERTa model updated with GPT-3 abstracts, which have been proccessed in order to remove the 'this study'\n                artifact. We obtained .98 val accuracy with this model; we will see how test data\n                goes. This data HAS NOT been paraphrased with our T5 paraphraser yet. \n               "
+}

@@ -1,0 +1,19 @@
+{
+    "Model Status": "POST_FINE_TUNING",
+    "data_type": "AbstractParaphrased",
+    "batch_size": 8,
+    "accuracy": 0.9884014120020171,
+    "confusion_matrix": [
+        [
+            931,
+            21
+        ],
+        [
+            2,
+            1029
+        ]
+    ],
+    "precision": 0.98,
+    "recall": 0.9980601357904947,
+    "Notes": "This run is the result of performancing inference on abstract data paraphrased according to the original scheme.\n               "
+}

@@ -1,0 +1,19 @@
+{
+    "Model Status": "POST_FINE_TUNING",
+    "data_type": "TestData",
+    "batch_size": 8,
+    "accuracy": 0.9,
+    "confusion_matrix": [
+        [
+            40,
+            8
+        ],
+        [
+            2,
+            50
+        ]
+    ],
+    "precision": 0.8620689655172413,
+    "recall": 0.9615384615384616,
+    "Notes": "Results from a test run on a small (50 samples) subset of abstract data. The validation accuracy was surpisingly high at .91. It was only trained for 2 epochs. I don't understand why it seemed to work, I was just testing that the training loop was up and running."
+}
